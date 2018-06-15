@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta charset="utf-8">
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width" name="viewport">
+	<meta content="" name="description">
+
+	<title>StreetView | Web Software</title>
+	<link href="index.css" media="all" rel="stylesheet" type="text/css">
+	<link href="pygments.css" media="all" rel="stylesheet" type="text/css">
+	
+	<script type="application/javascript" src="js/jquery-2.1.1.min.js"></script>
+	<script src="js/scripts.js" type="text/javascript"></script>
+	
+	<link rel="icon" type="image/png" href="favicon.png" />
+</head>
+
+<body class="websoftware-page" data-page="websoftware">
+	<div id="nav">
+		<h1><a href="index.html">StreetView</a></h1>
+
+	  <ol id="site-nav">
+			<li class="nav-prep active"><a href="preparations.html">Preparations</a></li>
+
+			<li class="nav-imaging"><a href="imaging.html">Imaging</a></li>
+
+			<li class="nav-processing"><a href="processing.html">Post-processing</a></li>
+
+			<li class="nav-websoftware"><a href="websoftware.html">Web Software</a></li>
+
+			<li class="nav-faq"><a href="faq.html">FAQ</a></li>
+		</ol>
+
+		<ul id="page-nav">
+        	<li><a href="#overview">Overview</a></li>
+			<li><a href="#imageTiles">Image Data &amp; Tiles</a></li>
+			<li><a href="#components">Canvas Components</a></li>
+            <li><a href="#template">Basic Template</a></li>
+            <li><a href="#html-css">HTML &amp; CSS</a></li>
+            <li><a href="#javascript">JavaScript</a></li>
+		</ul>
+	</div>
+
+	<div id="content">
+		<div class="primary-content">
+			<h1><a href="websoftware.html">Web Software</a><a href="imaging.html"></a></h1>
+		</div>
+	  <div class="primary-content">
+		  <h2 id="overview">Overview</h2>
+		  <p>You can find Google's documentation for custom StreetView viewpoints <a href="https://developers.google.com/maps/documentation/javascript/examples/streetview-overlays" target="_blank">here</a>. Frequently I found their documentation to be piecemeal or confusing, so I have recreated the most relevant sections below.</p>
+	  </div>
+	  <div class="primary-content">
+	    <h2 id="imageTiles">Image Data &amp; Tiles</h2>
+	    <p>This section is only for background explanation. If you are <a href="processing.html#tiling">using pyTiler</a> this process will be handled for you.</p>
+	    <p>To prevent long load times and browser performance issues, each viewpoint image is processed and sent as many small image tiles that are arranged on the client's browser to re-create the viewpoint.</p>
+	    <p>StreetView uses multiple zoom levels, each with a different number of equal-sized tiles. At each level, the number of tiles is equal to the number of tiles in the previous level, multiplied by 4. All tiles (even at different zoom levels) are the exact same size.</p>
+	    <p><strong>Tiles per level:</strong></p>
+	    <ol start="0">
+	      <li>1 tile</li>
+	      <li>4 tiles</li>
+	      <li>16 tiles</li>
+	      <li>64 tiles</li>
+	      <li>256 tiles</li>
+        </ol>
+	    <p>The tile system optimizes performance because only the visible tiles are loaded, and only when zoomed in are higher resolution tiles fetched.</p>
+      </div>
+	  <div class="primary-content">
+	    <h2 id="components">Components of a StreetView Canvas</h2>
+	    <p>A typical StreetView software implementation has a few different components (besides the image tiles):</p>
+	    <h3>The HTML Page/Template</h3>
+        <p class="subparagraph">The HTML page or template can be anything, but contains a section (&lt;div&gt;) that is given an ID and referenced later with Google's JavaScript StreetView library.</p>
+        <h3>The StreetView Library</h3>
+        <p class="subparagraph">Google's JavaScript StreetView Library does the heavy lifting by determining what image tiles should be loaded, enabling navigation between viewpoints, and other front-end controls. It is possible to interface with StreetView by using events and function calls (for example, to generate a URL that points to a specific viewpoint/perspective).</p>
+        <h3>The Viewpoint &amp; Navigation Data</h3>
+        <p class="subparagraph">The StreetView library uses a type of JSON-formatted config that contains data about the different viewpoints and how they connect to each other.</p>
+      </div>
+	  <div class="primary-content">
+	    <h2 id="template">Basic Template</h2>
+	    <p>Here is a basic StreetView template that provides a good starting point:</p>
+	    <ul>
+	      <li><a href="files/StreetViewBasic.zip">StreetViewBasic.zip</a> (working demo)</li>
+	      <li><a href="files/StreetViewBasic-NoTiles.zip">StreetViewBasic-NoTiles.zip</a> (the above, without any image tiles)</li>
+        </ul>
+	    <p>Both zips contain the following files:</p>
+	    <ul>
+	      <li><strong><a href="#index">index.html</a></strong> - a basic page that embeds the required scripts and has a section (<em>pano_canvas</em>) for the StreetView display.</li>
+	      <li><strong><a href="#css">default.css</a></strong> - a basic style sheet.</li>
+	      <li><strong><a href="#javascript">js/StreetViewData.js</a></strong> - a JavaScript file with data for the viewpoints (more information below).</li>
+	      <li><strong>tiles/*</strong> - image tiles for each viewpoint.</li>
+        </ul>
+      </div>
+	  <div class="primary-content">
+	    <h2 id="html-css">HTML Page &amp; CSS</h2>
+	    <h3 id="index">index.html:</h3>
+	    <div class="syntax">
+	      <pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+   <span class="nt">&lt;title&gt;</span>Basic StreetView<span class="nt">&lt;/title&gt;</span>
+   <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"default.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"application/javascript"</span> <span class="na">src=</span><span class="s">"https://maps.googleapis.com/maps/api/js?v=3.exp&amp;amp;sensor=false"</span><span class="nt">&gt;&lt;/script&gt;</span>
+   <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"application/javascript"</span> <span class="na">src=</span><span class="s">"js/StreetViewData.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body&gt;</span>
+   <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"pano_canvas"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+          </pre>
+        </div>
+	    <h3 id="css">&nbsp;</h3>
+	    <h3>default.css:</h3>
+	    <div class="syntax">
+	      <pre><span class="nt">html</span><span class="o">,</span> <span class="nt">body</span><span class="o">,</span> <span class="nf">#pano_canvas</span> <span class="p">{</span>
+   <span class="k">height</span><span class="o">:</span> <span class="m">100</span><span class="o">%</span><span class="p">;</span>
+   <span class="k">margin</span><span class="o">:</span> <span class="m">0px</span><span class="p">;</span>
+   <span class="k">padding</span><span class="o">:</span> <span class="m">0px</span><span class="p">;</span>
+<span class="p">}</span>
+          </pre>
+        </div>
+      </div>
+	  <div class="primary-content">
+	    <h2 id="javascript">JavaScript</h2>
+	    <p>The StreetViewData.js file contains several sections of code that you should be acquainted with. Please read this section while also looking at the code attached above.</p>
+	    <h3><span class="nx">streetViewOptions</span> block:</h3>
+	    <p>This block of code is inside the  <strong>initialize() function, </strong>and runs when the page is loaded. It sets the default values for the Google StreetView object.</p>
+        
+<div class="syntax">
+  <pre><span class="kd">var</span> <span class="nx">streetViewOptions</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">pano</span><span class="o">:</span> <span class="s2">"meetingroom_before_pumproom"</span><span class="p">,</span> <span class="c1">//Name of the viewpoint to load by default</span>
+	<span class="c1">// View angle options: So the viewpoint doesn't load facing a wall</span>
+	<span class="nx">pov</span><span class="o">:</span> <span class="p">{</span>
+		<span class="nx">heading</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+		<span class="nx">pitch</span><span class="o">:</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span>
+		<span class="nx">zoom</span><span class="o">:</span> <span class="mi">1</span>
+	<span class="p">},</span>
+	<span class="nx">visible</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="c1">//zoomControl: false,</span>
+	<span class="c1">//scrollwheel: false,</span>
+	<span class="nx">panoProvider</span><span class="o">:</span> <span class="nx">getCustomPanorama</span> <span class="c1">//Defines the function that returns tile URLs</span>
+<span class="p">}</span>
+</pre></div>
+<h3>&nbsp;</h3>
+<h3>getCustomPanorama function:</h3>
+<p>This function contains a switch statement. Inside the switch statement there are code blocks with data for each viewpoint. Here is one of these blocks:</p>
+<div class="syntax">
+  <pre><span class="k">case</span> <span class="s2">"meetingroom_before_pumproom"</span><span class="o">:</span>
+<span class="k">return</span> <span class="p">{</span>
+	<span class="nx">location</span><span class="o">:</span> <span class="p">{</span>
+		<span class="nx">pano</span><span class="o">:</span> <span class="s2">"meetingroom_before_pumproom"</span><span class="p">,</span>
+		<span class="c1">//description: "Somewhere - 555 Any Street, Pittsburgh, Pennsylvania, United States",</span>
+		<span class="nx">latLng</span><span class="o">:</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">maps</span><span class="p">.</span><span class="nx">LatLng</span><span class="p">(</span><span class="mf">40.4442389</span><span class="p">,</span> <span class="o">-</span><span class="mf">079.9584278</span><span class="p">)</span>
+	<span class="p">},</span>
+	<span class="c1">// The text for the copyright control.</span>
+	<span class="nx">copyright</span><span class="o">:</span> <span class="s2">"Imagery &amp;copy;2014 Your Name"</span><span class="p">,</span>
+	<span class="c1">// The definition of the tiles for this panorama.</span>
+	<span class="nx">tiles</span><span class="o">:</span> <span class="p">{</span>
+		<span class="nx">tileSize</span><span class="o">:</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">maps</span><span class="p">.</span><span class="nx">Size</span><span class="p">(</span><span class="mi">1079</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+		<span class="nx">worldSize</span><span class="o">:</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">maps</span><span class="p">.</span><span class="nx">Size</span><span class="p">(</span><span class="mi">17264</span><span class="p">,</span> <span class="mi">8192</span><span class="p">),</span>
+		<span class="c1">// The heading at the origin of the panorama tile set.</span>
+		<span class="nx">centerHeading</span><span class="o">:</span> <span class="nx">co</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="c1">//adjust this</span>
+		<span class="nx">getTileUrl</span><span class="o">:</span> <span class="nx">getCustomPanoramaTileUrl</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+<span class="k">break</span><span class="p">;</span>
+</pre></div>
+<p>pyTiler will generate these blocks of code for you. You only need to paste the blocks of code into the getCustomPanorama function and replace the <span class="nx">copyright</span>, <span class="nx">latLng</span>, and <span class="c1">description</span> sections (if desired).</p>
+<p><strong>Important Note:</strong> All viewpoints should center to face the same direction. Ideally this should be north, but can be any direction <em>(as long as it is consistant!).</em> You can modify the center by changing the value of the <span class="nx"><strong>centerHeading</strong></span> field.</p>
+<h3>&nbsp;</h3>
+<h3>createCustomLink function:</h3>
+<p>This function handles navigation between viewpoints. If you look at the two sections below, you will see that they reference each other with the <span class="nx"><strong>pano</strong></span> field. The <span class="nx"><strong>heading</strong></span> field determines at what angle the arrowhead appears. The <span class="c1">optional description</span> field sets the text displayed above the arrowhead.</p>
+<p>There is no reasonable way to connect viewpoints automatically, so you will have to manually specify this data yourself.</p>
+<div class="syntax"><pre><span class="k">case</span> <span class="s2">"pump_room"</span><span class="o">:</span>
+	<span class="nx">links</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+		<span class="c1">//description : "",</span>
+		<span class="nx">pano</span><span class="o">:</span> <span class="s2">"meetingroom_pumproom_door"</span><span class="p">,</span>
+		<span class="nx">heading</span><span class="o">:</span> <span class="mi">90</span>
+	<span class="p">});</span>
+<span class="k">break</span><span class="p">;</span>
+
+<span class="k">case</span> <span class="s2">"meetingroom_pumproom_door"</span><span class="o">:</span>
+	<span class="nx">links</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+		<span class="c1">//description : "",</span>
+		<span class="nx">pano</span><span class="o">:</span> <span class="s2">"meetingroom_past_pumproom"</span><span class="p">,</span>
+		<span class="nx">heading</span><span class="o">:</span> <span class="mi">0</span>
+	<span class="p">},</span> <span class="p">{</span>
+		<span class="c1">//description : "",</span>
+		<span class="nx">pano</span><span class="o">:</span> <span class="s2">"meetingroom_before_pumproom"</span><span class="p">,</span>
+		<span class="nx">heading</span><span class="o">:</span> <span class="mi">180</span>
+	<span class="p">},</span> <span class="p">{</span>
+		<span class="c1">//description : "",</span>
+		<span class="nx">pano</span><span class="o">:</span> <span class="s2">"pump_room"</span><span class="p">,</span>
+		<span class="nx">heading</span><span class="o">:</span> <span class="mi">270</span>
+	<span class="p">});</span>
+<span class="k">break</span><span class="p">;</span>
+</pre></div>
+
+	  </div>
+	</div>
+
+	<div id="footer">
+		<div class="footer-content">
+		  <a id="logo" href="mailto:Caelan.Borowiec@levylab.org" title=""></a>
+		  <span class="copyright">Documentation copyright Caelan Borowiec &copy;2014</span>
+		</div>
+	</div>
+</body>
+</html>
