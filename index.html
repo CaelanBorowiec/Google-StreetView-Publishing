@@ -11,19 +11,20 @@
 	<title>Overview | Preparations</title>
 	<link href="index.css" media="all" rel="stylesheet" type="text/css">
 	<script type="application/javascript" src="js/jquery-2.1.1.min.js"></script>
+	<script src="shadowbox-3.0.3/shadowbox.js" type="text/javascript"></script>
 	<script src="js/scripts.js" type="text/javascript"></script>
 	
 	<link rel="icon" type="image/png" href="favicon.png" />
 </head>
 
-<body class="intro-page" data-page="intro">
+<body class="overview-page" data-page="intro">
 	<div id="nav">
-		<h1><a href="index.html">StreetView</a></h1>
+		<h1>StreetView</h1>
 
 		<ol id="site-nav">
-			<li class="nav-prep active"><a href="preparations.html">Preparations</a></li>
-
-			<li class="nav-imaging"><a href="imaging.html">Imaging</a></li>
+		  <li class="nav-overview active"><a href="index.html">Overview</a></li>
+		  <li class="nav-prep active"><a href="preparations.html">Preparations</a></li>
+		  <li class="nav-imaging"><a href="imaging.html">Imaging</a></li>
 
 			<li class="nav-processing"><a href="processing.html">Post-processing</a></li>
 
@@ -33,11 +34,9 @@
 		</ol>
 
 		<ul id="page-nav">
-			<li><a href="#intro">Introduction</a></li>
-
-			<li><a href="#example">Example StreetView</a></li>
-
+		  	<li><a href="#intro">Introduction</a></li>
 			<li><a href="#equipmentlist">Equipment List</a></li>
+            <li><a href="#example">Example StreetView</a></li>
 		</ul>
 	</div>
 
@@ -52,35 +51,35 @@
 		  <p>If you cannot find a solution elsewhere and your question hasn't been answered in <a href="faq.html">the FAQ</a>, please email me at <a href="mailto:Caelan.Borowiec@levylab.org">Caelan.Borowiec@levylab.org</a> and I will do my best to help.</p>
 	  </div>
 	  <div class="primary-content">
+	    <h2 id="equipmentlist">Complete Equipment List </h2>
+	    <p>This is the equipment you will need:</p>
+	    <ul>
+	      <li>Gigapan Epic Pro Camera Mount</li>
+	      <li>Heavy-duty Tripod</li>
+	      <li>Canon 7D DSLR</li>
+	      <li>Canon EF 8-15mm f/4L Fisheye USM Lens</li>
+	      <li>Mini USB cable</li>
+	      <li>Computer running a current version of Windows (Win 7 suggested)</li>
+	      <li>Software listed on the <a href="processing.html">Post-processing</a> page.</li>
+        </ul>
+	    <p>Optional equipment:</p>
+	    <ul>
+	      <li>Android Tablet with DSLR Controller</li>
+	      <li>OTG Cable</li>
+        </ul>
+      </div>
+	  <div class="primary-content">
 	    <h2 id="example">Example StreetView Site</h2>
 	    <p>This is a finished Google StreetView project created using the process documented here on this site.</p>
 	    <iframe src="https://levylabssl.org/levylab.org/streetview/embeded.php" scrolling="no" frameborder="0" id="demo_streetview" style="width: 65%;" onload="$(this).css({'height': ($(this).width() / 2) +'px'});"></iframe>
 	    <p><a href="https://levylabssl.org/levylab.org/streetview/" target="_blank">View Fullscreen</a>.</p>
 	</div>
-		<div class="primary-content">
-			<h2 id="equipmentlist">Complete Equipment List			</h2>
-			<p>This is the equipment you will need:</p>
-            <ul>
-              <li>Gigapan Camera Mount</li>
-              <li>Heavy-duty Tripod</li>
-              <li>Canon DSLR</li>
-              <li>Fisheye Lens</li>
-              <li>Mini USB cable</li>
-              <li>Computer running a current version of Windows (Win 7 suggested)</li>
-              <li>Software listed on the <a href="processing.html">Post-processing</a> page.</li>
-            </ul>
-            <p>Optional equipment:</p>
-            <ul>
-              <li>Android Tablet with DSLR Controller</li>
-              <li>OTG Cable</li>
-            </ul>
-		</div>
 	</div>
 
 	<div id="footer">
 		<div class="footer-content">
 		  <a id="logo" href="mailto:Caelan.Borowiec@levylab.org" title=""></a>
-		  <span class="copyright">Documentation copyright Caelan Borowiec &copy;2014</span>
+		  <span class="copyright">Process & documentation copyright Caelan Borowiec <script>document.write(new Date().getFullYear())</script></span>
 		</div>
 	</div>
 </body>
